@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Mercearia Pro{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('dashboard') }}">
+      <span class="brand-mark">M</span><span><strong>MERCEARIA PRO</strong><small>GESTÃO INTELIGENTE</small></span>
+    </a>
+    <div class="nav-label">Visão geral</div>
+    <nav class="nav">
+      <a class="nav-link {{ 'active' if current_endpoint == 'dashboard' else '' }}" href="{{ url_for('dashboard') }}"><span class="nav-icon">▦</span> Painel inicial</a>
+    </nav>
+    <div class="nav-label">Operação</div>
+    <nav class="nav">
+      <a class="nav-link {{ 'active' if current_endpoint in ['produtos','novo_produto'] else '' }}" href="{{ url_for('produtos') }}"><span class="nav-icon">▣</span> Produtos</a>
+      <a class="nav-link {{ 'active' if current_endpoint == 'categorias' else '' }}" href="{{ url_for('categorias') }}"><span class="nav-icon">▤</span> Categorias</a>
+      <a class="nav-link {{ 'active' if current_endpoint == 'estoque' else '' }}" href="{{ url_for('estoque') }}"><span class="nav-icon">⇅</span> Estoque</a>
+      <a class="nav-link {{ 'active' if current_endpoint in ['pedidos','criar_pedido','confirmar_pedido'] else '' }}" href="{{ url_for('pedidos') }}"><span class="nav-icon">▧</span> Pedidos</a>
+    </nav>
+    <div class="nav-label">Análises</div>
+    <nav class="nav">
+      <a class="nav-link {{ 'active' if current_endpoint == 'relatorios' else '' }}" href="{{ url_for('relatorios') }}"><span class="nav-icon">▥</span> Relatórios</a>
+    </nav>
+    <div class="sidebar-foot">Sistema de gestão de mercearia<br>Conectado ao Supabase</div>
+  </aside>
+  <main class="main">
+    <header class="topline">
+      <div><div class="eyebrow">{% block eyebrow %}Gestão da mercearia{% endblock %}</div><h1>{% block heading %}Painel inicial{% endblock %}</h1><p class="subtitle">{% block subtitle %}Acompanhe a operação em um só lugar.{% endblock %}</p></div>
+      <div class="top-pill">● &nbsp; Painel de gestão</div>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for category, message in messages %}<div class="alert alert-{{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+</body></html>

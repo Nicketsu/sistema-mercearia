@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Produtos · Mercearia Pro{% endblock %}{% block eyebrow %}Cadastros{% endblock %}{% block heading %}Produtos{% endblock %}
+{% block subtitle %}Consulte os produtos, preços e níveis atuais de estoque.{% endblock %}
+{% block content %}
+<div class="toolbar"><span class="toolbar-note">{{ items|length }} produto(s) encontrado(s)</span><a class="btn btn-primary" href="{{ url_for('novo_produto') }}">＋ Cadastrar produto</a></div>
+<section class="card"><div class="table-wrap"><table><thead><tr><th>Produto</th><th>Categoria</th><th>Estoque</th><th>Preço de custo</th><th>Preço de venda</th><th>Status</th></tr></thead><tbody>
+{% for p in items %}<tr><td class="product-name">{{ p.nome_produto }}</td><td>{{ p.nome_categoria or '—' }}</td><td class="{{ 'stock-low' if p.estoque_atual <= 5 else '' }}">{{ p.estoque_atual|qty }} {{ p.sigla_unidade or '' }}</td><td>{{ p.preco_custo|brl }}</td><td><strong>{{ p.preco_venda|brl }}</strong></td><td><span class="badge {{ 'badge-success' if p.situacao == 'ativo' else 'badge-neutral' }}">{{ p.situacao }}</span></td></tr>
+{% else %}<tr><td colspan="6" class="empty">Nenhum produto cadastrado. Use “Cadastrar produto” para começar.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

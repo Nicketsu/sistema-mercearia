@@ -3,27 +3,15 @@ import psycopg2
 
 
 def conectar_supabase():
-    """
-    Conecta ao PostgreSQL do Supabase.
-    Configure a variável de ambiente SUPABASE_DB_URL com a URI do projeto.
-    Exemplo:
-    postgresql://postgres:SENHA@db.PROJETO.supabase.co:5432/postgres?sslmode=require
-    """
-    url = os.getenv("SUPABASE_DB_URL")
+    url = os.getenv("SUPABASE_DB_URL", "").strip()
     if not url:
         raise RuntimeError(
             "A variável SUPABASE_DB_URL não foi configurada. "
-            "Configure a URI do banco do Supabase antes de iniciar."
+            "Cadastre a URI do Supabase nas Environment Variables do Render."
         )
-
-    return psycopg2.connect(url, sslmode="require")
-
-
-def testar_conexao():
-    conexao = conectar_supabase()
-    try:
-        with conexao.cursor() as cur:
-            cur.execute("SELECT current_database(), current_user;")
-            return cur.fetchone()
-    finally:
-        conexao.close()
+    if url.startswith("$env:") or url.startswith("SUPABASE_DB_URL="):
+        raise RuntimeError(
+            "SUPABASE_DB_URL contém um comando em vez da URI. "
+            "No Render, Key deve ser SUPABASE_DB_URL e Value deve ser a URI postgresql://..."
+        )
+    return psycopg2.connect(url, sslmode="require", connect_timeout=15)

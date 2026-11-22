@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}Novo produto · Mercearia Pro{% endblock %}{% block eyebrow %}Cadastros{% endblock %}{% block heading %}Cadastrar produto{% endblock %}{% block subtitle %}Preencha as informações para incluir um produto no catálogo.{% endblock %}
+{% block content %}
+<section class="card form-card"><div class="card-head"><div><h2>Informações do produto</h2><p>O estoque inicial será registrado como uma entrada.</p></div></div><div class="card-body">
+<form method="post"><div class="form-grid">
+<div class="field full"><label>Nome do produto</label><input name="nome_produto" required placeholder="Ex.: Arroz tipo 1 — 5 kg"></div>
+<div class="field"><label>Categoria</label><select name="id_categoria" required><option value="">Selecione...</option>{% for c in categorias %}<option value="{{ c.id_categoria }}">{{ c.nome_categoria }}</option>{% endfor %}</select></div>
+<div class="field"><label>Unidade de medida</label><select name="id_unidade" required><option value="">Selecione...</option>{% for u in unidades %}<option value="{{ u.id_unidade }}">{{ u.nome_unidade }} ({{ u.sigla_unidade }})</option>{% endfor %}</select></div>
+<div class="field"><label>Preço de custo (R$)</label><input name="preco_custo" inputmode="decimal" required placeholder="0,00"></div>
+<div class="field"><label>Preço de venda (R$)</label><input name="preco_venda" inputmode="decimal" required placeholder="0,00"></div>
+<div class="field full"><label>Estoque inicial</label><input name="estoque_atual" inputmode="decimal" value="0" required></div>
+</div><div class="form-actions"><button class="btn btn-primary" type="submit">Salvar produto</button><a class="btn btn-light" href="{{ url_for('produtos') }}">Cancelar</a></div></form>
+</div></section>
+{% endblock %}
