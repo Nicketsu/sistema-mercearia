@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Painel inicial · Mercearia Pro{% endblock %}
+{% block heading %}Visão geral{% endblock %}
+{% block subtitle %}Acompanhe os principais números e a movimentação da sua mercearia.{% endblock %}
+{% block content %}
+<div class="grid stats">
+  <div class="card stat"><div class="stat-head">Produtos ativos <span class="stat-icon">▣</span></div><div class="stat-value">{{ stats.produtos_ativos }}</div><div class="stat-note">Produtos disponíveis no cadastro</div></div>
+  <div class="card stat"><div class="stat-head">Categorias <span class="stat-icon">▤</span></div><div class="stat-value">{{ stats.categorias }}</div><div class="stat-note">Grupos de produtos cadastrados</div></div>
+  <div class="card stat"><div class="stat-head">Pedidos pendentes <span class="stat-icon">▧</span></div><div class="stat-value">{{ stats.pedidos_pendentes }}</div><div class="stat-note">Aguardando confirmação</div></div>
+  <div class="card stat"><div class="stat-head">Vendas de hoje <span class="stat-icon">↗</span></div><div class="stat-value" style="font-size:23px">{{ stats.vendas_hoje|brl }}</div><div class="stat-note">Pedidos confirmados hoje</div></div>
+</div>
+<div class="grid two-col">
+  <section class="card">
+    <div class="card-head"><div><h2>Estoque em atenção</h2><p>Produtos com 5 unidades ou menos</p></div><a class="btn btn-light btn-sm" href="{{ url_for('estoque') }}">Gerenciar estoque</a></div>
+    <div class="table-wrap"><table><thead><tr><th>Produto</th><th>Estoque atual</th><th>Situação</th></tr></thead><tbody>
+    {% for p in low_stock %}<tr><td class="product-name">{{ p.nome_produto }}</td><td class="stock-low">{{ p.estoque_atual|qty }} {{ p.sigla_unidade or '' }}</td><td><span class="badge badge-warning">Estoque baixo</span></td></tr>{% else %}<tr><td colspan="3" class="empty">Nenhum produto em nível crítico.</td></tr>{% endfor %}
+    </tbody></table></div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><h2>Pedidos recentes</h2><p>Últimas movimentações de venda</p></div><a class="btn btn-light btn-sm" href="{{ url_for('pedidos') }}">Ver todos</a></div>
+    <div class="table-wrap"><table><thead><tr><th>Pedido</th><th>Data</th><th>Valor</th><th>Status</th></tr></thead><tbody>
+    {% for o in recent_orders %}<tr><td class="product-name">#{{ o.id_pedido }}</td><td>{{ o.data_hora|datetime_br }}</td><td>{{ o.valor_total|brl }}</td><td><span class="badge {{ 'badge-success' if o.status == 'confirmado' else 'badge-warning' if o.status == 'pendente' else 'badge-neutral' }}">{{ o.status }}</span></td></tr>{% else %}<tr><td colspan="4" class="empty">Ainda não há pedidos cadastrados.</td></tr>{% endfor %}
+    </tbody></table></div>
+  </section>
+</div>
+<div class="section-gap actions"><a class="btn btn-primary" href="{{ url_for('novo_produto') }}">＋ Novo produto</a><a class="btn btn-light" href="{{ url_for('pedidos') }}">＋ Criar pedido</a><a class="btn btn-light" href="{{ url_for('categorias') }}">Gerenciar categorias</a></div>
+{% endblock %}
