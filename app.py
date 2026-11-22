@@ -357,5 +357,13 @@ def menu_principal():
         acoes[escolha]()
 
 
+import os
+
 if __name__ == "__main__":
-    start_server(menu_principal, port=8080, debug=True)
+    porta = int(os.environ.get("PORT", 8080))
+    start_server(
+        menu_principal,
+        host="0.0.0.0",
+        port=porta,
+        debug=False
+    )
